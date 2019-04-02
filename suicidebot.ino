@@ -16,15 +16,11 @@ const int edgeRPin = 5;
 int L = LOW;
 int R = LOW;
 
-int resetPin = 7;
 
 boolean turn = false;
 int speed = 1;
-boolean start = false;
-boolean stop = true;
-
-int reset = LOW;
-boolean on = false;
+boolean start = true;
+boolean stop = false;
 
 void setup()
 {
@@ -43,18 +39,10 @@ void setup()
   pinMode(edgeLPin,INPUT);
   pinMode(edgeRPin,INPUT);
 
-  pinMode(resetPin, INPUT);
 }
 
 void loop()
 {
-  reset = digitalRead(resetPin);
-  if (!on && reset == HIGH) {
-    reset = LOW;
-    stop = false;
-    start = true;
-    on = true;
-  }
   L = digitalRead(edgeLPin);
   R = digitalRead(edgeRPin);
   if (L == HIGH || R == HIGH) {
@@ -72,7 +60,6 @@ void loop()
   delay(80);
   if (stop) {
   	setMotor(0,true);
-    on = false;
   }
   if (!stop && cm < 50 && !turn) {
     turn = true;
