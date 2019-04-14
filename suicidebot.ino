@@ -11,14 +11,12 @@ const int echoPin =2;
 const int trigPin =3;
 long duration, cm;
 
-const int edgeLPin = 4;
-const int edgeRPin = 5;
-int L = LOW;
-int R = LOW;
+const int echoPin2 = 4;
+const int trigPin2 = 5;
 
 
 boolean turn = false;
-int speed = 1;
+int speed = HIGH;
 boolean start = true;
 boolean stop = false;
 
@@ -35,19 +33,27 @@ void setup()
   
   pinMode(trigPin,OUTPUT);
   pinMode(echoPin,INPUT);
-  
-  pinMode(edgeLPin,INPUT);
-  pinMode(edgeRPin,INPUT);
+
+    pinMode(trigPin2,OUTPUT);
+  pinMode(echoPin2,INPUT);
 
 }
 
 void loop()
 {
-  L = digitalRead(edgeLPin);
-  R = digitalRead(edgeRPin);
-  if (L == HIGH || R == HIGH) {
-  	stop = true;
-  }
+  
+  digitalWrite(trigPin2,LOW);
+  delayMicroseconds(5);
+  digitalWrite(trigPin2,HIGH);
+  delayMicroseconds(20);
+  digitalWrite(trigPin2,LOW);
+  
+  pinMode(echoPin2,INPUT);
+  duration = pulseIn(echoPin2,HIGH);
+  cm =microsecondsToCentimeters(duration);
+  if (cm > 20) {
+      stop = true;
+    }
   digitalWrite(trigPin,LOW);
   delayMicroseconds(5);
   digitalWrite(trigPin,HIGH);
@@ -59,14 +65,14 @@ void loop()
   cm =microsecondsToCentimeters(duration);
   delay(80);
   if (stop) {
-  	setMotor(0,true);
+    setMotor(0,true);
   }
   if (!stop && cm < 50 && !turn) {
     turn = true;
     setMotor(speed, turn);
     }
   if (!stop && (cm > 50 && turn) || start){
-	turn = false;
+  turn = false;
     setMotor(speed, turn);
     }
   
@@ -76,19 +82,19 @@ void loop()
 
 void setMotor(int speed, boolean turn)
 {
-  analogWrite(enable1Pin, 0);
-  analogWrite(enable2Pin, 0);
+  digitalWrite(enable1Pin, 0);
+  digitalWrite(enable2Pin, 0);
   delay(1000);
   
-  analogWrite(enable1Pin, speed);
+  digitalWrite(enable1Pin, speed);
   digitalWrite(in1Pin, true);
   digitalWrite(in2Pin, false);
   
-  analogWrite(enable2Pin, speed);
+  digitalWrite(enable2Pin, speed);
   digitalWrite(in3Pin, ! turn);
   digitalWrite(in4Pin, turn);
 }
 
 
 long microsecondsToCentimeters(long microseconds){
-  return microseconds /29/2;}
+return microseconds /29/2;}
