@@ -9,7 +9,9 @@ int in4Pin = 13;
 
 const int echoPin =2;
 const int trigPin =3;
-long duration, cm;
+long duration;
+long cm = 100;
+long cm2 = 0;
 
 const int echoPin2 = 5;
 const int trigPin2 = 4;
@@ -50,8 +52,8 @@ void loop()
   
   pinMode(echoPin2,INPUT);
   duration = pulseIn(echoPin2,HIGH);
-  cm =microsecondsToCentimeters(duration);
-  if (cm > 5) {
+  cm2 =microsecondsToCentimeters(duration);
+  if (cm2 > 10) {
       stop = true;
     }
   digitalWrite(trigPin,LOW);
@@ -67,11 +69,11 @@ void loop()
   if (stop) {
     setMotor(0,true);
   }
-  if (!stop && cm < 50 && !turn) {
+  if (!stop && cm < 20 && !turn) {
     turn = true;
     setMotor(speed, turn);
     }
-  if (!stop && (cm > 50 && turn) || start){
+  if (!stop && (cm > 20 && turn) || start){
   turn = false;
     setMotor(speed, turn);
     }
